@@ -2311,7 +2311,39 @@ const gift=$('#gift'),openGiftButton=$('#openGift');if(openGiftButton&&gift)open
 for(let i=0;i<85;i++){const s=document.createElement('i');s.className='star';const size=Math.random()*3+1;Object.assign(s.style,{left:`${Math.random()*100}%`,top:`${Math.random()*100}%`,width:`${size}px`,height:`${size}px`,'--dur':`${2+Math.random()*4}s`,animationDelay:`${Math.random()*4}s`});sky.appendChild(s)}
 function shootingStar(){const s=document.createElement('i');s.className='shooting-star';s.style.left=`${20+Math.random()*70}%`;s.style.top=`${Math.random()*45}%`;sky.appendChild(s);setTimeout(()=>s.remove(),1500)}setInterval(()=>{if(Math.random()>.4)shootingStar()},5000);
 function floatPetal(){const item=document.createElement('span');item.className='float';const symbols=['♡','✧','❀','✿','✦'];item.textContent=symbols[Math.floor(Math.random()*symbols.length)];item.style.left=`${Math.random()*100}%`;item.style.fontSize=`${13+Math.random()*18}px`;item.style.animationDuration=`${8+Math.random()*6}s`;particles.appendChild(item);setTimeout(()=>item.remove(),15000)}setInterval(floatPetal,1000);
-let currentPhotoURL=null;const photoUpload=$('#photoUpload'),photoSlot=$('#photoSlot');if(photoUpload&&photoSlot)photoUpload.addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;if(!file.type.startsWith('image/')){alert('Please select an image file.');photoUpload.value='';return}if(currentPhotoURL)URL.revokeObjectURL(currentPhotoURL);currentPhotoURL=URL.createObjectURL(file);const img=new Image();img.alt='Your selected memory';img.src=currentPhotoURL;photoSlot.replaceChildren(img)});
+
+let currentPhotoURL = null;
+const photoUpload = $('#photoUpload');
+const photoSlot = $('#photoSlot');
+
+// Automatically display the photo hosted on GitHub
+if (photoSlot) {
+  const img = new Image();
+  img.alt = 'Our precious memory';
+  img.src = 'UanMe.jpg';
+  img.onload = () => photoSlot.replaceChildren(img);
+}
+if (photoUpload && photoSlot) {
+  photoUpload.addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file.');
+      photoUpload.value = '';
+      return;
+    }
+
+    if (currentPhotoURL) URL.revokeObjectURL(currentPhotoURL);
+
+    currentPhotoURL = URL.createObjectURL(file);
+
+    const img = new Image();
+    img.alt = 'Your selected memory';
+    img.src = currentPhotoURL;
+    photoSlot.replaceChildren(img);
+  });
+}
 function burst(amount=55){const symbols=['♡','✦','✧','♥','❀','💗'];for(let i=0;i<amount;i++){const item=document.createElement('span');item.className='float';item.textContent=symbols[Math.floor(Math.random()*symbols.length)];item.style.left=`${Math.random()*100}%`;item.style.bottom=`${Math.random()*20}%`;item.style.fontSize=`${14+Math.random()*22}px`;item.style.animationDuration=`${3+Math.random()*3}s`;confetti.appendChild(item);setTimeout(()=>item.remove(),7000)}}
 function fireworks(){for(let i=0;i<7;i++){setTimeout(()=>{const f=document.createElement('i');f.className='firework';f.style.setProperty('--x',`${15+Math.random()*70}%`);f.style.setProperty('--y',`${12+Math.random()*48}%`);document.body.appendChild(f);setTimeout(()=>f.remove(),1100)},i*180)}}
 const celebrateButton=$('#celebrateBtn'),finalNote=$('#finalNote');if(celebrateButton)celebrateButton.addEventListener('click',()=>{burst(100);for(let i=0;i<6;i++)setTimeout(shootingStar,i*250);fireworks();if(finalNote)finalNote.textContent='Make a wish, birthday girl. You deserve every beautiful thing. ✨';celebrateButton.disabled=true;setTimeout(()=>celebrateButton.disabled=false,1800)});
