@@ -2399,28 +2399,41 @@ function launchRocket(){const rocket=$('#rocket');rocket.classList.add('launch')
 const lover = document.getElementById('loverAudio');
 const enchanted = document.getElementById('enchantedAudio');
 
-// Try to start Lover when the page opens
 lover.volume = 0.45;
-lover.play().catch(() => {
-  // Autoplay may be blocked; start on the first interaction.
-  const startMusic = () => {
-    lover.play().catch(() => {});
-    document.removeEventListener('pointerdown', startMusic);
-    document.removeEventListener('keydown', startMusic);
-  };
 
-  document.addEventListener('pointerdown', startMusic);
-  document.addEventListener('keydown', startMusic);
+// Try autoplay when the page loads
+lover.play().catch(() => {
+  console.log('Autoplay blocked. Waiting for your first interaction.');
 });
 
-// Call this later when you want the magical reveal song.
+// Start music on the first tap or key press if autoplay was blocked
+async function startLover() {
+  if (lover.paused) {
+    try {
+      await lover.play();
+    } catch (error) {
+      console.log('Could not play Lover. Check the audio file URL.');
+    }
+  }
+
+  document.removeEventListener('click', startLover);
+  document.removeEventListener('touchstart', startLover);
+  document.removeEventListener('keydown', startLover);
+}
+
+document.addEventListener('click', startLover);
+document.addEventListener('touchstart', startLover);
+document.addEventListener('keydown', startLover);
+
+// Switch to Enchanted when called
 window.playEnchanted = async function () {
   lover.pause();
   enchanted.volume = 0.45;
+
   try {
     await enchanted.play();
   } catch (error) {
-    console.log('Tap the page to start the music.');
+    console.log('Could not play Enchanted. Check its file URL.');
   }
 };
 </script>
