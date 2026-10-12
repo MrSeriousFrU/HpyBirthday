@@ -2391,6 +2391,40 @@ const chosen=questions[0],gate=$('#challengeGate'),form=$('#challengeForm'),answ
 function launchRocket(){const rocket=$('#rocket');rocket.classList.add('launch');burst(32);fireworks();setTimeout(()=>{burst(65);fireworks()},700);setTimeout(()=>{gate.classList.add('dismissed');rocket.classList.remove('launch');answer.disabled=false;form.querySelector('button').disabled=false},2200)}
 })();
   </script>
+
+<audio id="loverAudio" src="./Lover.mp3" loop preload="auto"></audio>
+<audio id="enchantedAudio" src="./Enchanted.mp3" loop preload="none"></audio>
+
+<script>
+const lover = document.getElementById('loverAudio');
+const enchanted = document.getElementById('enchantedAudio');
+
+// Try to start Lover when the page opens
+lover.volume = 0.45;
+lover.play().catch(() => {
+  // Autoplay may be blocked; start on the first interaction.
+  const startMusic = () => {
+    lover.play().catch(() => {});
+    document.removeEventListener('pointerdown', startMusic);
+    document.removeEventListener('keydown', startMusic);
+  };
+
+  document.addEventListener('pointerdown', startMusic);
+  document.addEventListener('keydown', startMusic);
+});
+
+// Call this later when you want the magical reveal song.
+window.playEnchanted = async function () {
+  lover.pause();
+  enchanted.volume = 0.45;
+  try {
+    await enchanted.play();
+  } catch (error) {
+    console.log('Tap the page to start the music.');
+  }
+};
+</script>
+  
  </body>
 </html>
 
